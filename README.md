@@ -9,8 +9,9 @@ At the moment, I write down on a piece of paper what I've done for the day so I 
 ## ToDo
 
 [x] figure out how to work the [react-calendar-heatmap](https://github.com/kevinsqi/react-calendar-heatmap)
-[ ] simple bash script to automate updating the json file
+[x] simple ~~bash~~ python script to automate updating the json file
 [ ] add extra data (what i've done for the day) on click
 [ ] more meaningful information on hover
 [ ] figure out this readme situation
 [ ] bugfix the tooltip on empty days
+[ ] bonus color for days where i've done additional study (possibly include a note on what i actually did, i'm thinking that gold is a yummy color)

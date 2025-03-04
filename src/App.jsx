@@ -20,7 +20,9 @@ function App() {
         }}
         tooltipDataAttrs={(value) => ({
           'data-tooltip-id': 'calendar-tooltip',
-          'data-tooltip-content': `${value.date}: has count: ${value.count}`,
+          'data-tooltip-content': `${value.count} point${
+            value.count > 1 ? 's' : ''
+          } on ${value.date}`,
         })}
         values={learningData ? learningData : []}
       />
