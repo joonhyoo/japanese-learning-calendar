@@ -5,18 +5,22 @@ today = datetime.today().strftime('%Y-%m-%d')\
 
 completed_task_msg = """What did you do today?
 (you can write more than one by adding a space)
-    l: lessons
+    b: bunpro daily lessons
+    w: wanikani daily lessons
     r: review session
     a: additional study
     x: reset score
 """
+
 
 with open('./src/data.json') as jsonData:
     data = json.load(jsonData)
 
 
 def main():
+    # load_dates()
     tasks = input(completed_task_msg).split(' ')
+
     for task in tasks:
         handle_completed_task(task)
 
@@ -28,25 +32,29 @@ def handle_completed_task(task):
     if not date_exists(today):
         add_date(today)
     match task:
-        case 'l':
-            print('lesson')
-            add_points(2)
+        case 'b':
+            print('bunpro daily lessons')
+            add_points(task)
+        case 'w':
+            print('wanikani daily lessons')
+            add_points(task)
         case 'r':
             print('review')
-            add_points(1)
+            add_points(task)
         case 'a':
             print('additional study')
-            study_time = input('how many hours of study? ')
-            add_points(int(study_time))
+            material = input('what did you study? ')
+            study_time = input('how long did you study? ')
+            add_points(material, study_time)
         case 'x':
             print('reset score')
-            reset_points()
+            reset_points(today)
         case _:
             print('invalid input')
 
 
 def add_date(given_date):
-    data.append({'date': given_date, 'count': 0})
+    data.append({'date': given_date, 'studied': [], 'additional': {}})
 
 
 def load_dates():
@@ -72,16 +80,20 @@ def date_exists(given_date):
     return False
 
 
-def add_points(num):
+def add_points(material, hours=None):
     for x in data:
         if (x['date'] == today):
-            x['count'] += num
+            if (hours):
+                print(material, hours)
+                x['additional'][material] = hours
+            else:
+                x['studied'].append(material)
 
 
-def reset_points():
+def reset_points(given_date):
     for x in data:
-        if (x['date'] == today):
-            x['count'] = 0
+        if (x['date'] == given_date):
+            x = {'date': given_date, 'studied': [], 'additional': {}}
 
 
 main()
