@@ -1,5 +1,5 @@
 import json
-from datetime import datetime
+from datetime import datetime, date, timedelta
 
 today = datetime.today().strftime('%Y-%m-%d')\
 
@@ -17,7 +17,6 @@ with open('./src/data.json') as jsonData:
 
 def main():
     tasks = input(completed_task_msg).split(' ')
-
     for task in tasks:
         handle_completed_task(task)
 
@@ -26,8 +25,8 @@ def main():
 
 
 def handle_completed_task(task):
-    if not date_exists():
-        data.append({'date': today, 'count': 0})
+    if not date_exists(today):
+        add_date(today)
     match task:
         case 'l':
             print('lesson')
@@ -46,9 +45,28 @@ def handle_completed_task(task):
             print('invalid input')
 
 
-def date_exists():
+def add_date(given_date):
+    data.append({'date': given_date, 'count': 0})
+
+
+def load_dates():
+    # tool to quickly load all dates into calendar
+    sdate = date(2025, 1, 1)
+    edate = date(2025, 12, 31)
+    currdate = sdate
+
+    while currdate <= edate:
+        curr_date_str = currdate.strftime('%Y-%m-%d')
+        if not date_exists(curr_date_str):
+            add_date(curr_date_str)
+        currdate += timedelta(days=1)
+
+    data.sort(key=lambda r: r['date'])
+
+
+def date_exists(given_date):
     for item in data:
-        if item['date'] == today:
+        if item['date'] == given_date:
             return True
 
     return False
