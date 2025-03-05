@@ -17,6 +17,7 @@ with open('./src/data.json') as jsonData:
 
 def main():
     tasks = input(completed_task_msg).split(' ')
+
     for task in tasks:
         handle_completed_task(task)
 
@@ -25,6 +26,8 @@ def main():
 
 
 def handle_completed_task(task):
+    if not date_exists():
+        data.append({'date': today, 'count': 0})
     match task:
         case 'l':
             print('lesson')
@@ -41,6 +44,14 @@ def handle_completed_task(task):
             reset_points()
         case _:
             print('invalid input')
+
+
+def date_exists():
+    for item in data:
+        if item['date'] == today:
+            return True
+
+    return False
 
 
 def add_points(num):

@@ -15,3 +15,4 @@ At the moment, I write down on a piece of paper what I've done for the day so I 
 [ ] figure out this readme situation
 [ ] bugfix the tooltip on empty days
 [ ] bonus color for days where i've done additional study (possibly include a note on what i actually did, i'm thinking that gold is a yummy color)
+[ ] format dates on tool tips to be "March 5th" vs "2025-03-05"
