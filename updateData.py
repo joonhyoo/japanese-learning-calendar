@@ -39,7 +39,7 @@ def handle_completed_task(task):
             print('wanikani daily lessons')
             add_points(task)
         case 'r':
-            print('review')
+            print('review session')
             add_points(task)
         case 'a':
             print('additional study')
@@ -51,6 +51,7 @@ def handle_completed_task(task):
             reset_points(today)
         case _:
             print('invalid input')
+            valid = False
 
 
 def add_date(given_date):
@@ -91,9 +92,11 @@ def add_points(material, hours=None):
 
 
 def reset_points(given_date):
+    print(given_date)
     for x in data:
         if (x['date'] == given_date):
-            x = {'date': given_date, 'studied': [], 'additional': {}}
+            x['studied'] = []
+            x['additional'] = {}
 
 
 main()
