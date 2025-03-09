@@ -19,3 +19,4 @@ At the moment, I write down on a piece of paper what I've done for the day so I 
 - [ ] change data type for data to be more concise i don't think i need the additional tab based on the reformed usage
 - [ ] color gradient for css instead of fixed values because i'm limited by my brain
 - [ ] tidy and refactor extra hover info :>!
+- [ ] due to the chronological nature of how i'm storing the data, possibly use indexes (O(1)) instead of iterating (O(n)) for efficiency

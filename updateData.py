@@ -24,6 +24,8 @@ def main():
     for task in tasks:
         handle_completed_task(task)
 
+    print_points(today)
+
     with open('./src/data.json', 'w') as jsonData:
         json.dump(data, jsonData)
 
@@ -92,11 +94,17 @@ def add_points(material, hours=None):
 
 
 def reset_points(given_date):
-    print(given_date)
     for x in data:
         if (x['date'] == given_date):
             x['studied'] = []
             x['additional'] = {}
+
+
+def print_points(given_date):
+    for x in data:
+        if (x['date'] == given_date):
+            print('Studied today:', x['studied'])
+            print('Additional study:', x['additional'])
 
 
 main()
