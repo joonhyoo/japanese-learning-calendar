@@ -40,14 +40,6 @@ function App() {
         showWeekdayLabels
         classForValue={(givenDate) => {
           if (Object.keys(givenDate['additional']).length) return 'color-bonus';
-          /*
-            0 = 0
-            <.25 = 1
-            <.5 = 2
-            <.75 = 3
-            < 1 = 4
-            1 == 5
-          */
           const totalStudied = givenDate['studied'].length / maxStudied;
           if (totalStudied === 0) return 'color-0';
           if (totalStudied < 0.25) return 'color-1';
@@ -63,7 +55,6 @@ function App() {
           const month = date.toLocaleString('en-us', { month: 'long' }); // Full month name
           const points =
             sumValues(value['additional']) + value['studied'].length;
-
           const content = `${points} point${
             points !== 1 ? 's' : ''
           } on ${month} ${day}${getOrdinalSuffix(day)}`;
