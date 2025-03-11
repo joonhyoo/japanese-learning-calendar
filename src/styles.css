@@ -31,18 +31,25 @@
   fill: #772525;
 }
 
+.react-calendar-heatmap .color-bonus {
+  fill: #efbf04;
+}
+
 .react-calendar-heatmap .color-0 {
   fill: #ededed;
 }
 .react-calendar-heatmap .color-1 {
-  fill: #f2acac;
+  fill: #a5c0ef;
 }
 .react-calendar-heatmap .color-2 {
-  fill: #d17f7f;
+  fill: #76a5f6;
 }
 .react-calendar-heatmap .color-3 {
-  fill: #9b4949;
+  fill: #2c79fe;
 }
 .react-calendar-heatmap .color-4 {
-  fill: #772525;
+  fill: #005eff;
+}
+.react-calendar-heatmap .color-5 {
+  fill: #1e4df6;
 }

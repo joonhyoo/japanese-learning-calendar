@@ -69,14 +69,18 @@
   {
     "date": "2025-03-05",
     "studied": [],
-    "additional": { "genki textbook": "2" }
+    "additional": { "genki textbook": 2 }
   },
-  { "date": "2025-03-06", "studied": [], "additional": {} },
-  { "date": "2025-03-07", "studied": [], "additional": {} },
-  { "date": "2025-03-08", "studied": [], "additional": {} },
-  { "date": "2025-03-09", "studied": [], "additional": {} },
-  { "date": "2025-03-10", "studied": [], "additional": {} },
-  { "date": "2025-03-11", "studied": [], "additional": {} },
+  { "date": "2025-03-06", "studied": ["b", "w", "r"], "additional": {} },
+  { "date": "2025-03-07", "studied": ["b", "r", "w", "r"], "additional": {} },
+  { "date": "2025-03-08", "studied": ["b", "w", "r", "r"], "additional": {} },
+  { "date": "2025-03-09", "studied": ["r", "b", "w", "r"], "additional": {} },
+  { "date": "2025-03-10", "studied": ["r", "b", "w"], "additional": {} },
+  {
+    "date": "2025-03-11",
+    "studied": ["r", "r", "r", "w", "b"],
+    "additional": {}
+  },
   { "date": "2025-03-12", "studied": [], "additional": {} },
   { "date": "2025-03-13", "studied": [], "additional": {} },
   { "date": "2025-03-14", "studied": [], "additional": {} },

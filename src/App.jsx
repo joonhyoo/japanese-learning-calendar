@@ -2,10 +2,16 @@ import CalendarHeatmap from 'react-calendar-heatmap';
 import './styles.css';
 import learningData from './data.json';
 import { Tooltip } from 'react-tooltip';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 function App() {
   const [selected, setSelected] = useState(null);
+  const [maxStudied, setMaxStudied] = useState(null);
+
+  useEffect(() => {
+    const max = Math.max(...learningData.map((data) => data.studied.length));
+    setMaxStudied(max);
+  }, []);
 
   const sumValues = (obj) =>
     Object.values(obj)
@@ -32,13 +38,24 @@ function App() {
         startDate={new Date('2024-12-31')}
         endDate={new Date('2025-12-31')}
         showWeekdayLabels
-        classForValue={(value) => {
-          if (!value) {
-            return 'color-empty';
-          }
-          return `color-${
-            sumValues(value['additional']) + value['studied'].length
-          }`;
+        classForValue={(givenDate) => {
+          if (Object.keys(givenDate['additional']).length) return 'color-bonus';
+          /*
+            0 = 0
+            <.25 = 1
+            <.5 = 2
+            <.75 = 3
+            < 1 = 4
+            1 == 5
+          */
+          const totalStudied = givenDate['studied'].length / maxStudied;
+          if (totalStudied === 0) return 'color-0';
+          if (totalStudied < 0.25) return 'color-1';
+          if (totalStudied < 0.5) return 'color-2';
+          if (totalStudied < 0.75) return 'color-3';
+          if (totalStudied < 1) return 'color-4';
+          if (totalStudied === 1) return 'color-5';
+          return `color-${totalStudied}`;
         }}
         tooltipDataAttrs={(value) => {
           const date = new Date(value.date);
@@ -92,6 +109,7 @@ function App() {
           <div>WaniKani lessons: ❌</div>
         </>
       )}
+      {maxStudied}
     </div>
   );
 }
