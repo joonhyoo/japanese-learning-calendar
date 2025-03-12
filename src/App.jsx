@@ -18,6 +18,21 @@ function App() {
       .map((num) => Number(num))
       .reduce((a, b) => a + b, 0);
 
+  const lessonTypes = [
+    { label: 'Bunpro lessons', key: 'b' },
+    { label: 'WaniKani lessons', key: 'w' },
+    { label: 'Review sessions', key: 'r' },
+  ];
+
+  const generateStudyCompletion = (studiedList, studyType) => {
+    return (
+      studiedList
+        .filter((item) => item === studyType)
+        .map(() => '✅')
+        .join('') || '❌'
+    );
+  };
+
   const getOrdinalSuffix = (day) => {
     if (day > 3 && day < 21) return 'th'; // Covers 11-19
     switch (day % 10) {
@@ -68,39 +83,21 @@ function App() {
       />
       <Tooltip id="calendar-tooltip" />
       {selected && (
-        <>
+        <div>
           {selected.date} {selected.count}
-          <div>
-            Bunpro lessons:
-            {selected.studied
-              .filter((item) => item === 'b')
-              .map(() => '✅')
-              .join('') || '❌'}
-          </div>
-          <div>
-            WaniKani lessons:
-            {selected.studied
-              .filter((item) => item === 'w')
-              .map(() => '✅')
-              .join('') || '❌'}
-          </div>
-          <div>
-            Review sessions:
-            {selected.studied
-              .filter((item) => item === 'r')
-              .map(() => '✅')
-              .join('') || '❌'}
-          </div>
+          {lessonTypes.map(({ label, key }) => (
+            <div key={key}>
+              {label}: {generateStudyCompletion(selected.studied, key)}
+            </div>
+          ))}
           <div>
             Additional study:
             {Object.entries(selected.additional)
               .map(([key, value]) => `${key} for ${value} hrs`)
               .join('') || '❌'}
           </div>
-          <div>WaniKani lessons: ❌</div>
-        </>
+        </div>
       )}
-      {maxStudied}
     </div>
   );
 }
