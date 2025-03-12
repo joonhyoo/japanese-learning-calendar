@@ -23,3 +23,4 @@ At the moment, I write down on a piece of paper what I've done for the day so I 
 - [ ] use firebase backend instead of json file for synced updates
 - [ ] create user stories to build proper scope
 - [ ] add bonus statistics like amount of daily lessons, and percent of the year complete maybe
+- [ ] update to typescript
