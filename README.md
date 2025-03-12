@@ -22,3 +22,4 @@ At the moment, I write down on a piece of paper what I've done for the day so I 
 - [ ] due to the chronological nature of how i'm storing the data, possibly use indexes (O(1)) instead of iterating (O(n)) for efficiency
 - [ ] use firebase backend instead of json file for synced updates
 - [ ] create user stories to build proper scope
+- [ ] add bonus statistics like amount of daily lessons, and percent of the year complete maybe
