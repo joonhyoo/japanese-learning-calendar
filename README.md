@@ -24,3 +24,4 @@ At the moment, I write down on a piece of paper what I've done for the day so I 
 - [ ] create user stories to build proper scope
 - [ ] add bonus statistics like amount of daily lessons, and percent of the year complete maybe
 - [ ] update to typescript
+- [ ] responsive design on mobile (will expand on this later: need to come up with elegant solutions for this)
