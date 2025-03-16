@@ -27,3 +27,6 @@ At the moment, I write down on a piece of paper what I've done for the day so I 
 - [ ] responsive design on mobile (will expand on this later: need to come up with elegant solutions for this)
 - [ ] add ability to update yesterday's data
 - [ ] figure out CI/CD to auto deploy
+- [ ] add edit page in figma design
+- [ ] implement inital desktop design
+- [ ] implement initial mobile design
