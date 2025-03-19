@@ -4,11 +4,11 @@ This is a simple backendless react page which holds a github actions-coded calen
 
 At the moment, I write down on a piece of paper what I've done for the day so I can remember - but I think a digital version that I can look at online will be more epic >:&#41;
 
-<img src="./src/assets/example_image.jpg" width="800">
+<img src="./src/assets/example_image.jpg" width="600">
 
 ## 🚀 Currently Working On
 
-- implementing firebase backend for user auth, persistent storage
+- implementing supabase
 - designing frontend for marking sessions as complete
 - implementing initial figma design
 
