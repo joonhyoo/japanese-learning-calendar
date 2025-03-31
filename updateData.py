@@ -1,6 +1,7 @@
 import json
 from datetime import datetime, date, timedelta
 
+
 # Dev tool atm for me to update the json data
 # This will be replaced by the front end once I implement backend w db
 # and user auth
@@ -23,7 +24,6 @@ completed_task_msg = (
     'You can write more than one by separating with a space)\n'
     f'{task_options}\n'
 )
-
 
 with open('./src/data.json') as jsonData:
     data = json.load(jsonData)
