@@ -50,12 +50,23 @@ def main():
             # ToDo: think about how to in sql
             print('not implemented yet')
         elif task == 'x':
-            # ToDo: somehow request a reset
-            print('not implemented yet')
+            clear_study_records(study_date)
         else:
             completed_tasks.append(task)
     len(completed_tasks) > 0 and pushChanges(study_date, completed_tasks)
     print_completed_tasks(study_date)
+
+
+def clear_study_records(study_date):
+    response = (
+        supabase.table("studied_items")
+        .delete()
+        .eq("study_date", study_date)
+        .eq("user_id", uid)
+        .execute()
+    )
+    print('deleting items studied on', study_date)
+    print(len(response.data), 'item/s deleted')
 
 
 def print_completed_tasks(study_date):
@@ -78,7 +89,7 @@ def print_completed_tasks(study_date):
         print('nothing studied on', study_date)
 
 
-def pushChanges(study_date, completed_tasks):
+def doesRecordExist(study_date):
     response = (
         supabase.table("study_records")
         .select("*")
@@ -86,46 +97,67 @@ def pushChanges(study_date, completed_tasks):
         .eq("user_id", uid)
         .execute()
     )
-    if response.data:
+    return bool(response.data)
+
+
+def insertStudyRecord(study_date):
+    insert_response = (
+        supabase.table("study_records")
+        .insert({'study_date': study_date, 'user_id': uid})
+        .execute()
+    )
+    print("Inserted new record:", insert_response.data)
+
+
+def getStudyRow(study_date, item):
+    check_response = (
+        supabase.table("studied_items")
+        .select("count")
+        .eq("study_date", study_date)
+        .eq("user_id", uid)
+        .eq("material_id", item)
+        .execute()
+    )
+    return check_response.data
+
+
+def updateStudyRow(study_date, new_count, item):
+    update_response = (
+        supabase.table("studied_items")
+        .update({'count': new_count})
+        .eq("study_date", study_date)
+        .eq("user_id", uid)
+        .eq("material_id", item)
+        .execute()
+    )
+    print('updated row:', update_response.data)
+
+
+def insertStudyRow(study_date, item):
+    insert_response = (
+        supabase.table("studied_items")
+        .insert({'user_id': uid, 'study_date': study_date, 'material_id': item})
+        .execute()
+    )
+    print('inserted new row:', insert_response.data)
+
+
+def pushChanges(study_date, completed_tasks):
+    if doesRecordExist(study_date):
         print('user with that record exists, skipping')
     else:
-        insert_response = (
-            supabase.table("study_records")
-            .insert({'study_date': study_date, 'user_id': uid})
-            .execute()
-        )
-        print("Inserted new record:", insert_response.data)
+        insertStudyRecord(study_date)
     for item in completed_tasks:
         if item is None:
             continue
-        check_response = (
-            supabase.table("studied_items")
-            .select("count")
-            .eq("study_date", study_date)
-            .eq("user_id", uid)
-            .eq("material_id", item)
-            .execute()
-        )
-        if (check_response.data):
-            print('row already exists, updating count')
-            print(check_response.data[0]['count'])
-            new_count = int(check_response.data[0]['count']) + 1
-            update_response = (
-                supabase.table("studied_items")
-                .update({'count': new_count})
-                .eq("study_date", study_date)
-                .eq("user_id", uid)
-                .eq("material_id", item)
-                .execute()
-            )
-            print('updated row:', update_response.data)
+        rowData = getStudyRow(study_date, item)
+        if (rowData):
+            print('row already exists, updating count to: ',
+                  rowData[0]['count'])
+            new_count = int(rowData[0]['count']) + 1
+            updateStudyRow(study_date, new_count, item)
         else:
-            insert_response = (
-                supabase.table("studied_items")
-                .insert({'user_id': uid, 'study_date': study_date, 'material_id': item})
-                .execute()
-            )
-            print('insterted new row:', insert_response.data)
+            insertStudyRow(study_date, item)
 
 
 main()
