@@ -24,6 +24,12 @@ task_mapping = {
     'x': 'reset score'
 }
 
+id_mapping = {
+    'w': 1,
+    'b': 2,
+    'r': 3,
+}
+
 task_options = "\n".join(
     f"\t{key}: {value}" for key, value in task_mapping.items())
 
@@ -47,14 +53,47 @@ def main():
     for task in tasks_to_process:
         print(task_mapping[task])
         if task == 'a':
-            # ToDo: think about how to in sql
-            print('not implemented yet')
+            handle_additional_study(study_date)
         elif task == 'x':
             clear_study_records(study_date)
         else:
-            completed_tasks.append(task)
+            material_id = id_mapping[task]
+            completed_tasks.append(material_id)
     len(completed_tasks) > 0 and pushChanges(study_date, completed_tasks)
     print_completed_tasks(study_date)
+
+
+def handle_additional_study(study_date):
+    material_title = input('What did you study? ').lower()
+    study_time = input('How long did you study? ')
+    material_data = get_additional_study(material_title)
+    if (not material_data):
+        material_id = add_material(material_title)
+    else:
+        material_id = material_data[0]['id']
+    insertStudiedItem(study_date, material_id)
+    updateStudiedItem(study_date, study_time, material_id)
+
+
+def add_material(material_title):
+    insert_response = (
+        supabase.table("study_material")
+        .insert({'user_id': uid, 'title': material_title})
+        .execute()
+    )
+    print('inserted new material', f"'{material_title}'", insert_response.data)
+    return insert_response.data[0]['id']
+
+
+def get_additional_study(material_title):
+    check_response = (
+        supabase.table("study_material")
+        .select('*')
+        .eq("title", material_title)
+        .eq("user_id", uid)
+        .execute()
+    )
+    return check_response.data
 
 
 def clear_study_records(study_date):
@@ -109,34 +148,34 @@ def insertStudyRecord(study_date):
     print("Inserted new record:", insert_response.data)
 
 
-def getStudyRow(study_date, item):
+def getStudyRow(study_date, material_id):
     check_response = (
         supabase.table("studied_items")
         .select("count")
         .eq("study_date", study_date)
         .eq("user_id", uid)
-        .eq("material_id", item)
+        .eq("material_id", material_id)
         .execute()
     )
     return check_response.data
 
 
-def updateStudyRow(study_date, new_count, item):
+def updateStudiedItem(study_date, new_count, material_id):
     update_response = (
         supabase.table("studied_items")
         .update({'count': new_count})
         .eq("study_date", study_date)
         .eq("user_id", uid)
-        .eq("material_id", item)
+        .eq("material_id", material_id)
         .execute()
     )
     print('updated row:', update_response.data)
 
 
-def insertStudyRow(study_date, item):
+def insertStudiedItem(study_date, material_id):
     insert_response = (
         supabase.table("studied_items")
-        .insert({'user_id': uid, 'study_date': study_date, 'material_id': item})
+        .insert({'user_id': uid, 'study_date': study_date, 'material_id': material_id})
         .execute()
     )
     print('inserted new row:', insert_response.data)
@@ -147,17 +186,17 @@ def pushChanges(study_date, completed_tasks):
         print('user with that record exists, skipping')
     else:
         insertStudyRecord(study_date)
-    for item in completed_tasks:
-        if item is None:
+    for material_id in completed_tasks:
+        if material_id is None:
             continue
-        rowData = getStudyRow(study_date, item)
+        rowData = getStudyRow(study_date, material_id)
         if (rowData):
             print('row already exists, updating count to: ',
                   rowData[0]['count'])
             new_count = int(rowData[0]['count']) + 1
-            updateStudyRow(study_date, new_count, item)
+            updateStudiedItem(study_date, new_count, material_id)
         else:
-            insertStudyRow(study_date, item)
+            insertStudiedItem(study_date, material_id)
 
 
 main()
