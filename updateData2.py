@@ -1,4 +1,5 @@
 import os
+import sys
 from dotenv import load_dotenv
 from datetime import datetime, date, timedelta
 from supabase import create_client, Client
@@ -41,13 +42,14 @@ completed_task_msg = (
 
 
 def main():
-    study_date = datetime.today()
+    # if args are passed then it's being called as a subprocess
     completed_tasks = []
-    day = input('Today or (Y)esterday? ')
-    if (day.lower() == 'y'):
-        study_date = study_date - timedelta(days=1)
-    study_date = study_date.strftime('%Y-%m-%d')
-
+    study_date = datetime.today()
+    day = input('Today or insert date YYYY-MM-DD\t')
+    print('day is', day)
+    if (len(day)):
+        study_date = datetime.strptime(day, "%Y-%m-%d")
+    print(study_date)
     tasks = input(completed_task_msg).split(' ')
     tasks_to_process = [task for task in tasks if task in task_mapping]
     for task in tasks_to_process:
