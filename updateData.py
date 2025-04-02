@@ -103,8 +103,12 @@ def clear_study_records(study_date):
         .eq("user_id", uid)
         .execute()
     )
-    print('deleting items studied on', study_date)
-    print(len(response.data), 'item/s deleted')
+    if (not len(response.data)):
+        print('there was nothing to delete.')
+    else:
+        print('deleting items studied on', study_date)
+        total_count = sum(item["count"] for item in response.data)
+        print(total_count, 'points deleted')
 
 
 def print_completed_tasks(study_date):
@@ -115,7 +119,7 @@ def print_completed_tasks(study_date):
         .eq("user_id", uid)
         .execute()
     )
-    if (response.data):
+    if (response.data and response.data[0]['studied_items']):
         data = response.data[0]
         study_material = data['study_material']
         count = data['studied_items']
@@ -190,9 +194,9 @@ def pushChanges(study_date, completed_tasks):
             continue
         rowData = getStudyRow(study_date, material_id)
         if (rowData):
-            print('row already exists, updating count to: ',
-                  rowData[0]['count'])
             new_count = int(rowData[0]['count']) + 1
+            print('row already exists, updating count to: ',
+                  new_count)
             updateStudiedItem(study_date, new_count, material_id)
         else:
             insertStudiedItem(study_date, material_id)
