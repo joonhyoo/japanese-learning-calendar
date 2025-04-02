@@ -119,7 +119,7 @@ def print_completed_tasks(study_date):
         .eq("user_id", uid)
         .execute()
     )
-    if (response.data):
+    if (response.data and response.data[0]['studied_items']):
         data = response.data[0]
         study_material = data['study_material']
         count = data['studied_items']
