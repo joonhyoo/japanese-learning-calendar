@@ -45,8 +45,15 @@ def main():
     study_date = datetime.today().strftime("%Y-%m-%d")
     day = input('Today or insert date YYYY-MM-DD\t')
     if (len(day)):
-        study_date = datetime.strptime(day, "%Y-%m-%d")
+        try:
+            study_date = datetime.strptime(
+                day, "%Y-%m-%d").strftime("%Y-%m-%d")
+        except:
+            print('Format must match YYYY-MM-DD')
+            exit()
+
     print('study date is:', study_date)
+    print(study_date, type(study_date))
     tasks = input(completed_task_msg).split(' ')
     tasks_to_process = [task for task in tasks if task in task_mapping]
     for task in tasks_to_process:
