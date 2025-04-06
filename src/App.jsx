@@ -30,7 +30,7 @@ function App() {
         delete item.studied_items;
         return item;
       });
-      setMaxStudied2(Math.max(formattedData.map((record) => record.points)));
+      setMaxStudied2(Math.max(...formattedData.map((record) => record.points)));
       setTest(formattedData);
       return;
     }
