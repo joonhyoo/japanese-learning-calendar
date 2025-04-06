@@ -1,16 +1,41 @@
 import CalendarHeatmap from 'react-calendar-heatmap';
 import './styles.css';
-import learningData from './data.json';
+import learningData from '../data.json';
 import { Tooltip } from 'react-tooltip';
 import { useEffect, useState } from 'react';
+import supabase from './utils/supabase';
 
 function App() {
   const [selected, setSelected] = useState(null);
+  const [selected2, setSelected2] = useState(null);
   const [maxStudied, setMaxStudied] = useState(null);
+  const [maxStudied2, setMaxStudied2] = useState(null);
+  const [test, setTest] = useState(null);
 
   useEffect(() => {
     const max = Math.max(...learningData.map((data) => data.studied.length));
     setMaxStudied(max);
+
+    async function getData() {
+      const { data, error } = await supabase
+        .from('study_records')
+        .select('study_date, study_material(title), studied_items(count)');
+      const formattedData = data.map((item) => {
+        item.date = item.study_date;
+        delete item.study_date;
+        item.points = item.studied_items.reduce(
+          (a, b) => a + (b['count'] || 0),
+          0
+        );
+        delete item.studied_items;
+        return item;
+      });
+      setMaxStudied2(Math.max(formattedData.map((record) => record.points)));
+      setTest(formattedData);
+      return;
+    }
+
+    getData();
   }, []);
 
   const sumValues = (obj) =>
@@ -96,6 +121,53 @@ function App() {
               .map(([key, value]) => `${key} for ${value} hrs`)
               .join('') || '❌'}
           </div>
+        </div>
+      )}
+      {test && (
+        <CalendarHeatmap
+          startDate={new Date('2024-12-31')}
+          endDate={new Date('2025-12-31')}
+          showWeekdayLabels
+          classForValue={(studyRecord) => {
+            // if (Object.keys(givenDate['additional']).length) return 'color-bonus';
+            if (!studyRecord) return 'color-0';
+            const totalStudied = studyRecord['points'] / maxStudied2;
+            if (totalStudied === 0) return 'color-0';
+            if (totalStudied === 1) return 'color-5';
+            return `color-${Math.ceil(totalStudied * 4)}`;
+          }}
+          tooltipDataAttrs={(value) => {
+            const date = new Date(value['date']);
+            const day = date.getDate();
+            const month = date.toLocaleString('en-us', { month: 'long' }); // Full month name
+            const points = value.points || 0;
+            const content = `${points} point${
+              points !== 1 ? 's' : ''
+            } on ${month} ${day}${getOrdinalSuffix(day)}`;
+            return {
+              'data-tooltip-id': 'calendar-tooltip2',
+              'data-tooltip-content': content,
+            };
+          }}
+          values={test}
+          onMouseOver={(e, selected_date) => setSelected2(selected_date)}
+        />
+      )}
+      <Tooltip id="calendar-tooltip2" />
+      {selected2 && (
+        <div>
+          {selected2.date} {selected2.user_id}
+          {/* {lessonTypes.map(({ label, key }) => (
+            <div key={key}>
+              {label}: {generateStudyCompletion(selected2.studied, key)}
+            </div>
+          ))} */}
+          {/* <div>
+            Additional study:
+            {Object.entries(selected2.additional)
+              .map(([key, value]) => `${key} for ${value} hrs`)
+              .join('') || '❌'}
+          </div> */}
         </div>
       )}
     </div>
