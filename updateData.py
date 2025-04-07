@@ -53,7 +53,6 @@ def main():
             exit()
 
     print('study date is:', study_date)
-    print(study_date, type(study_date))
     tasks = input(completed_task_msg).split(' ')
     tasks_to_process = [task for task in tasks if task in task_mapping]
     for task in tasks_to_process:
