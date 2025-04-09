@@ -120,19 +120,28 @@ def clear_study_records(study_date):
 def print_completed_tasks(study_date):
     response = (
         supabase.table("study_records")
-        .select("user_profile(user_name), study_material(title), studied_items(count)")
+        .select("user_profile(user_name), studied_items(count, material_id), study_material(title, id)")
         .eq("study_date", study_date)
         .eq("user_id", uid)
         .execute()
     )
+
     if (response.data and response.data[0]['studied_items']):
         data = response.data[0]
+        user_name = data['user_profile']['user_name']
         study_material = data['study_material']
         count = data['studied_items']
-        user_name = data['user_profile']['user_name']
+        # Create a mapping from material_id to count
+        count_map = {c['material_id']: c['count'] for c in count}
+
+        # Zip by matching IDs
+        paired = [
+            {'title': m['title'], 'count': count_map.get(m['id'], 0)}
+            for m in study_material
+        ]
         print(user_name, 'studied on', study_date)
-        for x, y in zip(study_material, count):
-            print(x['title'], 'x', y['count'])
+        for pair in paired:
+            print(pair['title'], 'x', pair['count'])
     else:
         print('nothing studied on', study_date)
 
